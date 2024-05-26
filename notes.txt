@@ -1,0 +1,9 @@
+Sistem Penggajian Karyawan:
+
+Buat program yang dapat menghitung gaji karyawan menggunakan c++
+Fitur-fitur:
+Input data karyawan: Nama, NIP, jabatan, gaji pokok, tunjangan, dan jam kerja dalam file csv
+buat fungsi untuk membaca mencetak tabel dari data file csv 
+Perhitungan gaji: Hitung gaji pokok, lembur, tunjangan, dan potongan (jika ada).
+Pembuatan slip gaji: Buat slip gaji yang berisi data karyawan dan rincian gajinya.
+Gunakan array untuk menyimpan data karyawan, pointer untuk mengakses data, dan stack/queue untuk mensimulasikan antrian penggajian.
