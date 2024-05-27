@@ -6,15 +6,34 @@
 
 using namespace std;
 
+string formatRupiah(int number) {
+  
+  // convert var number ke tipe data string
+  string str = to_string(number);
+  
+  // ambil jumlah karakter var str 
+  int len = str.length();
+
+  // jumlah digit yg akan dipisahkan
+  int dLen = 3;
+
+  // tambahkan kutip setiap 3 digit
+  while (len > dLen) {
+    str.insert(len - dLen, 1, ',');
+    dLen += 4;
+    len += 1;
+  }
+  return "Rp. " + str;
+}
 // Definisikan struktur data untuk menyimpan informasi karyawan
 struct Karyawan {
     string nama;
     string NIP;
     string jabatan;
-    double gajiPokok;
-    double tunjangan;
+    int gajiPokok;
+    int tunjangan;
     int jamKerja;
-    double gajiTotal; // Tambahkan gajiTotal untuk menyimpan gaji total
+    int gajiTotal; // Tambahkan gajiTotal untuk menyimpan gaji total
 };
 
 // Fungsi untuk memisahkan string berdasarkan delimiter
@@ -44,8 +63,8 @@ vector<Karyawan> bacaDataKaryawan(const string& namaFile) {
             karyawan.nama = data[0];
             karyawan.NIP = data[1];
             karyawan.jabatan = data[2];
-            karyawan.gajiPokok = stod(data[3]);
-            karyawan.tunjangan = stod(data[4]);
+            karyawan.gajiPokok = stoi(data[3]);
+            karyawan.tunjangan = stoi(data[4]);
             karyawan.jamKerja = stoi(data[5]);
 
             dataKaryawan.push_back(karyawan);
@@ -80,13 +99,13 @@ void cetakTabelKaryawan(const vector<Karyawan>& dataKaryawan) {
     cout << "+---------------------------------------------------------------------+" << endl;
 
     for (const Karyawan& karyawan : dataKaryawan) {
-        cout << "| " << setw(20) << left << karyawan.nama << " | "
+        cout << "| " << setw(10) << left << karyawan.nama << " | "
              << setw(15) << left << karyawan.NIP << " | "
              << setw(15) << left << karyawan.jabatan << " | "
-             << setw(10) << right << karyawan.gajiPokok << " | "
-             << setw(10) << right << karyawan.tunjangan << " | "
+             << setw(10) << right << formatRupiah(karyawan.gajiPokok) << " | "
+             << setw(10) << right << formatRupiah(karyawan.tunjangan) << " | "
              << setw(10) << right << karyawan.jamKerja << " | "
-             << setw(10) << right << karyawan.gajiTotal << " |" << endl;
+             << setw(10) << right << formatRupiah(karyawan.gajiTotal) << " |" << endl;
     }
 
     cout << "+---------------------------------------------------------------------+" << endl;
