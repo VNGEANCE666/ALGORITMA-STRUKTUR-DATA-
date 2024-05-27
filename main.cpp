@@ -1,31 +1,24 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <string>
-#include <iomanip> // Untuk setw dan left/right
+#include <iomanip>
+#include <sstream>
 
 using namespace std;
 
 string formatRupiah(int number) {
-  
-  // convert var number ke tipe data string
-  string str = to_string(number);
-  
-  // ambil jumlah karakter var str 
-  int len = str.length();
+    string str = to_string(number);
+    int len = str.length();
+    int dLen = 3;
 
-  // jumlah digit yg akan dipisahkan
-  int dLen = 3;
-
-  // tambahkan kutip setiap 3 digit
-  while (len > dLen) {
-    str.insert(len - dLen, 1, ',');
-    dLen += 4;
-    len += 1;
-  }
-  return "Rp. " + str;
+    while (len > dLen) {
+        str.insert(len - dLen, 1, ',');
+        dLen += 4;
+        len += 1;
+    }
+    return "Rp. " + str;
 }
-// Definisikan struktur data untuk menyimpan informasi karyawan
+
 struct Karyawan {
     string nama;
     string NIP;
@@ -33,95 +26,83 @@ struct Karyawan {
     int gajiPokok;
     int tunjangan;
     int jamKerja;
-    int gajiTotal; // Tambahkan gajiTotal untuk menyimpan gaji total
+    int gajiTotal;
 };
 
-// Fungsi untuk memisahkan string berdasarkan delimiter
-vector<string> split(string str, char delimiter) {
-    vector<string> tokens;
-    string token;
-    istringstream ss(str);
-
-    while (getline(ss, token, delimiter)) {
-        tokens.push_back(token);
-    }
-
-    return tokens;
-}
-
-// Fungsi untuk membaca data karyawan dari file CSV
-vector<Karyawan> bacaDataKaryawan(const string& namaFile) {
-    vector<Karyawan> dataKaryawan;
+int bacaDataKaryawan(const string& namaFile, Karyawan* dataKaryawan, int maxKaryawan) {
     ifstream file(namaFile);
+    int count = 0;
 
     if (file.is_open()) {
         string baris;
-        while (getline(file, baris)) {
-            vector<string> data = split(baris, ',');
+        getline(file, baris);
+        while (getline(file, baris) && count < maxKaryawan) {
+            stringstream ss(baris);
+            string kolom;
             Karyawan karyawan;
 
-            karyawan.nama = data[0];
-            karyawan.NIP = data[1];
-            karyawan.jabatan = data[2];
-            karyawan.gajiPokok = stoi(data[3]);
-            karyawan.tunjangan = stoi(data[4]);
-            karyawan.jamKerja = stoi(data[5]);
+            getline(ss, kolom, ',');
+            karyawan.nama = kolom;
+            getline(ss, kolom, ',');
+            karyawan.NIP = kolom;
+            getline(ss, kolom, ',');
+            karyawan.jabatan = kolom;
+            getline(ss, kolom, ',');
+            karyawan.gajiPokok = stoi(kolom);
+            getline(ss, kolom, ',');
+            karyawan.tunjangan = stoi(kolom);
+            getline(ss, kolom, ',');
+            karyawan.jamKerja = stoi(kolom);
 
-            dataKaryawan.push_back(karyawan);
+            dataKaryawan[count++] = karyawan;
         }
-
         file.close();
         cout << "Data karyawan berhasil dimuat dari file CSV." << endl;
     } else {
         cout << "Gagal membuka file CSV!" << endl;
     }
 
-    return dataKaryawan;
+    return count;
 }
 
-// Fungsi untuk menghitung gaji karyawan
-void hitungGaji(vector<Karyawan>& dataKaryawan) {
+void hitungGaji(Karyawan* dataKaryawan, int jumlahKaryawan) {
     const int jamLemburPerHari = 8;
-    const double gajiLemburPerJam = 1.5 * dataKaryawan[0].gajiPokok / jamLemburPerHari;
 
-    for (Karyawan& karyawan : dataKaryawan) {
-        int jamLembur = karyawan.jamKerja - (5 * jamLemburPerHari);
+    for (int i = 0; i < jumlahKaryawan; ++i) {
+        double gajiLemburPerJam = 1.5 * dataKaryawan[i].gajiPokok / jamLemburPerHari;
+        int jamLembur = dataKaryawan[i].jamKerja - (5 * jamLemburPerHari);
         double gajiLembur = jamLembur * gajiLemburPerJam;
 
-        karyawan.gajiTotal = karyawan.gajiPokok + gajiLembur + karyawan.tunjangan;
+        dataKaryawan[i].gajiTotal = dataKaryawan[i].gajiPokok + gajiLembur + dataKaryawan[i].tunjangan;
     }
 }
 
-// Fungsi untuk mencetak tabel data karyawan
-void cetakTabelKaryawan(const vector<Karyawan>& dataKaryawan) {
-    cout << "+---------------------------------------------------------------------+" << endl;
-    cout << "| Nama                 | NIP           | Jabatan       | Gaji Pokok | Tunjangan | Jam Kerja | Gaji Total |" << endl;
-    cout << "+---------------------------------------------------------------------+" << endl;
+void cetakTabelKaryawan(const Karyawan* dataKaryawan, int jumlahKaryawan) {
+    cout << "+-----------------------------------------------------------------------------------------------------------+" << endl;
+    cout << "| Nama     | NIP          | Jabatan    | Gaji Pokok    | Tunjangan      | Jam Kerja  | Gaji Total           |" << endl;
+    cout << "+-----------------------------------------------------------------------------------------------------------+" << endl;
 
-    for (const Karyawan& karyawan : dataKaryawan) {
-        cout << "| " << setw(10) << left << karyawan.nama << " | "
-             << setw(15) << left << karyawan.NIP << " | "
-             << setw(15) << left << karyawan.jabatan << " | "
-             << setw(10) << right << formatRupiah(karyawan.gajiPokok) << " | "
-             << setw(10) << right << formatRupiah(karyawan.tunjangan) << " | "
-             << setw(10) << right << karyawan.jamKerja << " | "
-             << setw(10) << right << formatRupiah(karyawan.gajiTotal) << " |" << endl;
+    for (int i = 0; i < jumlahKaryawan; ++i) {
+        cout << "| " << setw(8) << left << dataKaryawan[i].nama << " | "
+             << setw(12) << left << dataKaryawan[i].NIP << " | "
+             << setw(10) << left << dataKaryawan[i].jabatan << " | "
+             << setw(11) << left << formatRupiah(dataKaryawan[i].gajiPokok) << " | "
+             << setw(14) << left << formatRupiah(dataKaryawan[i].tunjangan) << " | "
+             << setw(10) << left << dataKaryawan[i].jamKerja << " | "
+             << setw(20) << left << formatRupiah(dataKaryawan[i].gajiTotal) << " |" << endl;
     }
 
-    cout << "+---------------------------------------------------------------------+" << endl;
+    cout << "+-----------------------------------------------------------------------------------------------------------+" << endl;
 }
 
 int main() {
     const string namaFile = "penggajian_bulanan_maret_2024.csv";
+    const int maxKaryawan = 100;
+    Karyawan dataKaryawan[maxKaryawan];
 
-    // Memuat data karyawan dari file CSV
-    vector<Karyawan> dataKaryawan = bacaDataKaryawan(namaFile);
-
-    // Hitung gaji total setiap karyawan
-    hitungGaji(dataKaryawan);
-
-    // Cetak tabel data karyawan
-    cetakTabelKaryawan(dataKaryawan);
+    int jumlahKaryawan = bacaDataKaryawan(namaFile, dataKaryawan, maxKaryawan);
+    hitungGaji(dataKaryawan, jumlahKaryawan);
+    cetakTabelKaryawan(dataKaryawan, jumlahKaryawan);
 
     return 0;
 }
