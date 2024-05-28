@@ -78,21 +78,21 @@ void hitungGaji(Karyawan* dataKaryawan, int jumlahKaryawan) {
 }
 
 void cetakTabelKaryawan(const Karyawan* dataKaryawan, int jumlahKaryawan) {
-    cout << "+-----------------------------------------------------------------------------------------------------------+" << endl;
-    cout << "| Nama     | NIP          | Jabatan    | Gaji Pokok    | Tunjangan      | Jam Kerja  | Gaji Total           |" << endl;
-    cout << "+-----------------------------------------------------------------------------------------------------------+" << endl;
+    cout << "+----------------------------------------------------------------------------------------------------------+" << endl;
+    cout << "| Nama     | NIP          | Jabatan    | Gaji Pokok    | Tunjangan     | Jam Kerja  | Gaji Total           |" << endl;
+    cout << "+----------------------------------------------------------------------------------------------------------+" << endl;
 
     for (int i = 0; i < jumlahKaryawan; ++i) {
         cout << "| " << setw(8) << left << dataKaryawan[i].nama << " | "
              << setw(12) << left << dataKaryawan[i].NIP << " | "
              << setw(10) << left << dataKaryawan[i].jabatan << " | "
-             << setw(11) << left << formatRupiah(dataKaryawan[i].gajiPokok) << " | "
-             << setw(14) << left << formatRupiah(dataKaryawan[i].tunjangan) << " | "
+             << setw(13) << left << formatRupiah(dataKaryawan[i].gajiPokok) << " | "
+             << setw(13) << left << formatRupiah(dataKaryawan[i].tunjangan) << " | "
              << setw(10) << left << dataKaryawan[i].jamKerja << " | "
              << setw(20) << left << formatRupiah(dataKaryawan[i].gajiTotal) << " |" << endl;
     }
 
-    cout << "+-----------------------------------------------------------------------------------------------------------+" << endl;
+    cout << "+----------------------------------------------------------------------------------------------------------+" << endl;
 }
 
 int main() {
