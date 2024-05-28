@@ -35,7 +35,7 @@ int bacaDataKaryawan(const string& namaFile, Karyawan* dataKaryawan, int maxKary
 
     if (file.is_open()) {
         string baris;
-        getline(file, baris);
+        // getline(file, baris);  ==========> hapus cuy
         while (getline(file, baris) && count < maxKaryawan) {
             stringstream ss(baris);
             string kolom;
