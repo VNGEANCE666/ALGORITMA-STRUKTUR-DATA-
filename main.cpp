@@ -23,9 +23,9 @@ struct Karyawan {
     string nama;
     string NIP;
     string jabatan;
-    int gajiPokok;
+    int gaji_perhari;
     int tunjangan;
-    int jamKerja;
+    int harikerja;
     int gajiTotal;
 };
 
@@ -35,7 +35,7 @@ int bacaDataKaryawan(const string& namaFile, Karyawan* dataKaryawan, int maxKary
 
     if (file.is_open()) {
         string baris;
-        // getline(file, baris);  ==========> hapus cuy
+        
         while (getline(file, baris) && count < maxKaryawan) {
             stringstream ss(baris);
             string kolom;
@@ -48,11 +48,11 @@ int bacaDataKaryawan(const string& namaFile, Karyawan* dataKaryawan, int maxKary
             getline(ss, kolom, ',');
             karyawan.jabatan = kolom;
             getline(ss, kolom, ',');
-            karyawan.gajiPokok = stoi(kolom);
+            karyawan.gaji_perhari = stoi(kolom);
             getline(ss, kolom, ',');
             karyawan.tunjangan = stoi(kolom);
             getline(ss, kolom, ',');
-            karyawan.jamKerja = stoi(kolom);
+            karyawan.harikerja = stoi(kolom);
 
             dataKaryawan[count++] = karyawan;
         }
@@ -69,11 +69,11 @@ void hitungGaji(Karyawan* dataKaryawan, int jumlahKaryawan) {
     const int jamLemburPerHari = 8;
 
     for (int i = 0; i < jumlahKaryawan; ++i) {
-        double gajiLemburPerJam = 1.5 * dataKaryawan[i].gajiPokok / jamLemburPerHari;
-        int jamLembur = dataKaryawan[i].jamKerja - (5 * jamLemburPerHari);
+        double gajiLemburPerJam = 1.5 * dataKaryawan[i].gaji_perhari / jamLemburPerHari;
+        int jamLembur = dataKaryawan[i].harikerja - (5 * jamLemburPerHari);
         double gajiLembur = jamLembur * gajiLemburPerJam;
 
-        dataKaryawan[i].gajiTotal = dataKaryawan[i].gajiPokok + gajiLembur + dataKaryawan[i].tunjangan;
+        dataKaryawan[i].gajiTotal = dataKaryawan[i].gaji_perhari + gajiLembur + dataKaryawan[i].tunjangan;
     }
 }
 
@@ -86,9 +86,9 @@ void cetakTabelKaryawan(const Karyawan* dataKaryawan, int jumlahKaryawan) {
         cout << "| " << setw(8) << left << dataKaryawan[i].nama << " | "
              << setw(12) << left << dataKaryawan[i].NIP << " | "
              << setw(10) << left << dataKaryawan[i].jabatan << " | "
-             << setw(13) << left << formatRupiah(dataKaryawan[i].gajiPokok) << " | "
+             << setw(13) << left << formatRupiah(dataKaryawan[i].gaji_perhari) << " | "
              << setw(13) << left << formatRupiah(dataKaryawan[i].tunjangan) << " | "
-             << setw(10) << left << dataKaryawan[i].jamKerja << " | "
+             << setw(10) << left << dataKaryawan[i].harikerja << " | "
              << setw(20) << left << formatRupiah(dataKaryawan[i].gajiTotal) << " |" << endl;
     }
 
