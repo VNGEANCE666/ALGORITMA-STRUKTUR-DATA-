@@ -66,14 +66,8 @@ int bacaDataKaryawan(const string& namaFile, Karyawan* dataKaryawan, int maxKary
 }
 
 void hitungGaji(Karyawan* dataKaryawan, int jumlahKaryawan) {
-    const int jamLemburPerHari = 8;
-
-    for (int i = 0; i < jumlahKaryawan; ++i) {
-        double gajiLemburPerJam = 1.5 * dataKaryawan[i].gaji_perhari / jamLemburPerHari;
-        int jamLembur = dataKaryawan[i].harikerja - (5 * jamLemburPerHari);
-        double gajiLembur = jamLembur * gajiLemburPerJam;
-
-        dataKaryawan[i].gajiTotal = dataKaryawan[i].gaji_perhari + gajiLembur + dataKaryawan[i].tunjangan;
+    for (int i = 0; i < jumlahKaryawan; i++) {
+        dataKaryawan[i].gajiTotal = (dataKaryawan[i].gaji_perhari * dataKaryawan[i].harikerja) + dataKaryawan[i].tunjangan;
     }
 }
 
